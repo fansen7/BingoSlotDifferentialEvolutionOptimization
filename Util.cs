@@ -11,7 +11,7 @@ class Util {
 	/**
 	 * Enforce symbols diversity.
 	 */
-	public const bool STRICT_SYMBOLS_DIVERSITY = true;
+	public const bool STRICT_SYMBOLS_DIVERSITY = false;
 
 	/**
 	 * Report in steps.

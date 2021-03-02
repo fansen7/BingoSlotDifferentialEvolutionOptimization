@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace BingoSlotDifferentialEvolutionOptimization {
 class DiscreteDifferentialEvolution {
-	public const long NUMBER_OF_RECOMBINATIONS = 1000;
+	public const long NUMBER_OF_RECOMBINATIONS = 100;
 
 	public const int POPULATION_SIZE = 17;
 
@@ -46,6 +46,7 @@ class DiscreteDifferentialEvolution {
 	}
 
 	public void differs () {
+		// 兩兩相減
 		int min = int.MaxValue;
 		int max = int.MinValue;
 		for (int i = 0; i < offspring.Length; i++) {
@@ -61,13 +62,16 @@ class DiscreteDifferentialEvolution {
 		}
 
 		/*
-		* Normalize.
-		*/
+		 * Normalize.
+		 */
+		//  Normalize成 -1, 0, 1
 		for (int i = 0; i < offspring.Length; i++) {
 			for (int j = 0; j < offspring [i].Length; j++) {
 				offspring [i] [j] -= min;
-				if (min < max) {
+				int a = offspring[i][j];
+					if (min < max) {
 					offspring [i] [j] = 3 * offspring [i] [j] / (max - min + 1) - 1;
+					int b = offspring[i][j];
 				}
 			}
 		}
@@ -102,13 +106,14 @@ class DiscreteDifferentialEvolution {
 		}
 	}
 
-	public void survive () {
+	public double survive () {
 		SlotMachineSimulation simulation = null;
 
 		/*
 		 * Re-evaluate target.
 		 */
 		if(Util.REEVALUATE_TARGET_VECTOR == true) {
+			Console.WriteLine("REEVALUATE_TARGET_VECTOR");
 			simulation = new SlotMachineSimulation ();
 			simulation.load (population [targetIndex]);
 			simulation.simulate (symbolsDiversity);
@@ -122,16 +127,18 @@ class DiscreteDifferentialEvolution {
 		/*
 		 * Evaluate new solution.
 		 */
+		Console.WriteLine("Evaluate new solution");
 		simulation = new SlotMachineSimulation ();
 		simulation.load (offspring);
 		simulation.simulate (symbolsDiversity);
+
 		double cost = simulation.costFunction (targetRtp, symbolsDiversity);
 
 		/*
 		 * If better solution is not found - exit.
 		 */
 		if (cost >= fitness [targetIndex]) {
-			return;
+			return fitness[targetIndex];
 		}
 
 		fitness [targetIndex] = cost;
@@ -145,6 +152,7 @@ class DiscreteDifferentialEvolution {
 		if (fitness [bestIndex] > fitness [targetIndex]) {
 			bestIndex = targetIndex;
 		}
+		return cost;
 	}
 
 	public void optimize () {
@@ -154,16 +162,20 @@ class DiscreteDifferentialEvolution {
 			differs ();
 			mutate ();
 			crossover ();
-			survive ();
+			double cost = survive ();
 			//TODO Remove absolutely identical individuals from the population.
 			watch.Stop ();
 
 			if (Util.VERBOSE == true) {
+				Console.WriteLine("targetRTP:");
 				Console.WriteLine (targetRtp);
 				CultureInfo ci = new CultureInfo ("en-us");
 				Console.WriteLine ("{0}:{1}:{2}", ((int)watch.Elapsed.TotalHours).ToString ("D2", ci), ((int)watch.Elapsed.TotalMinutes % 60).ToString ("D2", ci), ((int)watch.Elapsed.TotalSeconds % 60).ToString ("D2", ci));
 				Console.WriteLine (this);
 			}
+			if (cost < 0.005)
+				Console.WriteLine(r);
+				break;
 		}
 	}
 

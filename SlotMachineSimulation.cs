@@ -906,6 +906,11 @@ class SlotMachineSimulation {
 	}
 
 	public double rtpDifference (double target) {
+		Console.WriteLine((double)wonMoney);
+		Console.WriteLine((double)lostMoney);
+		Console.Write("RTP: ");
+		Console.WriteLine((double)wonMoney / (double)lostMoney);
+
 		return Math.Abs (target - (double)wonMoney / (double)lostMoney);
 	}
 
@@ -962,10 +967,13 @@ class SlotMachineSimulation {
 	}
 
 	public double costFunction (double target, int length) {
-		return symbolsDiversity (length) * 1 + rtpDifference (target) * 100 + prizeDeviation () * 10;
+			//return symbolsDiversity (length) * 1 + rtpDifference (target) * 100 + prizeDeviation () * 10;
+		Console.WriteLine("Cost:" + rtpDifference(target));
+		return rtpDifference(target);
+
 	}
 
-	public void simulate (int length) {
+		public void simulate (int length) {
 		if (Util.STRICT_SYMBOLS_DIVERSITY == true) {
 			enforceSymbolsDiversity (length);
 		}

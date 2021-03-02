@@ -97,7 +97,7 @@ new int[] {5,9,10,11,4,5,8,4,10,5,6,11,10,6,8,3,6,7,11,6,9,10,12,4,10,12,4,8,9,4
 			},
 		};
 
-		for(int i=0; i<targets.Length && i < reels.Length; i++) {
+		for(int i=5; i<targets.Length && i < reels.Length; i++) {
 			DiscreteDifferentialEvolution dde = new DiscreteDifferentialEvolution (reels[i], targets[i], 3);
 			dde.optimize ();
 			//Console.WriteLine( dde );
